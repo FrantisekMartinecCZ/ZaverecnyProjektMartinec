@@ -1,0 +1,160 @@
+﻿@model IEnumerable<EvidencePojisteni.Models.Pojistenec>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4"><i class="bi bi-people-fill text-primary"></i> Seznam pojištěnců</h2>
+
+    <!-- Zobrazení informační zprávy (pokud existuje) -->
+    @if (TempData["Zprava"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="d-flex align-items-center">
+                <div class="me-2">
+                    <i class="bi bi-info-circle-fill text-success"></i>
+                </div>
+                <div>
+                    @TempData["Zprava"]
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Zavřít"></button>
+        </div>
+    }
+
+    <!-- Tlačítko pro přidání nového pojištěnce (jen pro pojistitele) -->
+    @if (User.IsInRole("Pojistitel"))
+    {
+        <div class="d-flex justify-content-center mb-3">
+            <a class="btn btn-primary" asp-action="vytvoreniPojistence">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-person-plus-fill me-2"></i>
+                    <span>Nový pojištěnec</span>
+                </div>
+            </a>
+        </div>
+
+    }
+
+    <!-- Tabulka pojištěnců -->
+
+    <table class="table table-hover align-middle">
+
+        <thead class="table-dark">
+            <tr>
+                <th class="text-center text-nowrap" style="width: 20%;"><i class="bi bi-person-fill me-2"></i>Jméno a příjmení</th>
+                <th class="text-center text-nowrap" style="width: 15%;"><i class="bi bi-calendar3 me-2"></i>Věk</th>
+
+                <th class="text-center text-nowrap" style="width: 20%;"><i class="bi bi-person-badge me-2"></i>Zákonný zástupce</th>
+                <th class="text-center text-nowrap" style="width: 25%;"><i class="bi bi-geo-alt-fill me-2"></i>Bydliště</th>
+                <th class="text-center text-nowrap" style="width: 20%;"><i class="bi bi-tools me-2"></i>Akce</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pojistenec in Model)
+            {
+                <tr style="height: 80px;">
+                    <!-- Jméno a příjmení -->
+                    <td class="text-center text-nowrap">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <i class="bi bi-person-circle me-2
+                @(pojistenec.Pohlavi == Pohlavi.muž ? "text-primary"
+                  : pojistenec.Pohlavi == Pohlavi.žena ? "text-danger"
+                  : "text-success")">
+                            </i>
+                            <!-- Jméno a Příjmení také dle pohlaví -->
+                            <a asp-action="Detaily" asp-route-id="@pojistenec.IdPojistence"
+                               class="text-decoration-none fw-bold
+               @(pojistenec.Pohlavi == Pohlavi.muž ? "text-primary"
+                 : pojistenec.Pohlavi == Pohlavi.žena ? "text-danger"
+                 : "text-success")">
+                                @pojistenec.Jmeno @pojistenec.Prijmeni
+                            </a>
+                        </div>
+                    </td>
+
+                    <!-- Věk -->
+                    <td class="text-center text-nowrap">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <i class="bi bi-gift-fill me-2 text-info"></i>
+                            @(DateTime.Today.Year - (pojistenec.DatumNarozeni?.Year ?? 0) -
+                                ((pojistenec.DatumNarozeni?.Date > DateTime.Today.AddYears(-(DateTime.Today.Year - (pojistenec.DatumNarozeni?.Year ?? 0)))) ? 1 : 0)) let
+                        </div>
+                    </td>
+
+                    <!-- Zákonný zástupce -->
+                    <td class="text-center text-nowrap">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <!-- Ikona podle pohlaví -->
+                            <i class="bi bi-person-badge me-2
+            @(pojistenec.Pohlavi == Pohlavi.muž ? "text-primary"
+              : pojistenec.Pohlavi == Pohlavi.žena ? "text-danger"
+              : "text-success")">
+                            </i>
+
+                            @{
+                                var vek = pojistenec.DatumNarozeni.HasValue
+                                ? DateTime.Today.Year - pojistenec.DatumNarozeni.Value.Year
+                                - (DateTime.Today < pojistenec.DatumNarozeni.Value.AddYears(
+                                DateTime.Today.Year - pojistenec.DatumNarozeni.Value.Year) ? 1 : 0)
+                                : 0;
+                            }
+
+                            @if (vek < 18)
+                            {
+                                <!-- Pokud je pojištěnec mladší 18 let, zobrazíme zástupce barevně -->
+                                if (string.IsNullOrWhiteSpace(pojistenec.JmenoZakonnehoZastupce))
+                                {
+                                    <span class="@(pojistenec.Pohlavi == Pohlavi.muž ? "text-primary"
+                                 : pojistenec.Pohlavi == Pohlavi.žena ? "text-danger"
+                                 : "text-success")">
+                                        -
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="@(pojistenec.Pohlavi == Pohlavi.muž ? "text-primary"
+                                 : pojistenec.Pohlavi == Pohlavi.žena ? "text-danger"
+                                 : "text-success")">
+                                        @pojistenec.JmenoZakonnehoZastupce @pojistenec.PrijmeniZakonnehoZastupce
+                                    </span>
+                                }
+                            }
+                            else
+                            {
+                                <!-- Pokud je starší 18 let, zobrazíme jen "-", třeba také barevně. -->
+                                <span class="@(pojistenec.Pohlavi == Pohlavi.muž ? "text-primary"
+                             : pojistenec.Pohlavi == Pohlavi.žena ? "text-danger"
+                             : "text-success")">
+                                    -
+                                </span>
+                            }
+                        </div>
+                    </td>
+
+
+                    <!-- Bydliště -->
+                    <td class="text-center text-nowrap">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <i class="bi bi-house-fill me-2 text-success"></i>
+                            @pojistenec.Ulice, @pojistenec.Mesto
+                        </div>
+                    </td>
+
+                    <!-- Akce -->
+                    <td class="text-center text-nowrap">
+                        @if (User.IsInRole("Pojistitel"))
+                        {
+                            <div class="d-flex justify-content-center gap-2">
+                                <a class="btn btn-warning btn-sm" asp-action="EditacePojistence" asp-route-id="@pojistenec.IdPojistence">
+                                    <i class="bi bi-pencil-square me-1"></i>Editovat
+                                </a>
+                                <a class="btn btn-danger btn-sm" asp-action="SmazaniPojistenec" asp-route-id="@pojistenec.IdPojistence">
+                                    <i class="bi bi-trash-fill me-1"></i>Odstranit
+                                </a>
+                            </div>
+                        }
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,32 @@
+/* Nastavení základních stylù pro HTML a BODY */
+html, body {
+    height: 100%; /* Zajišuje, e celé tìlo stránky bude mít vdy 100% vıšky */
+    margin: 0; /* Odstraní vıchozí okraje */
+    padding: 0; /* Odstraní vıchozí vnitøní odsazení */
+    display: flex; /* Umoòuje pouít flexbox pro lepší rozloení obsahu */
+    flex-direction: column; /* Uspoøádání prvkù ve sloupci (hlavièka, obsah, patièka) */
+}
+
+/* Kontejner hlavního obsahu */
+.container {
+    flex: 1; /* Zajišuje, e obsah zabere dostupnı prostor mezi hlavièkou a patièkou */
+    max-width: 800px; /* Omezí maximální šíøku kontejneru, aby nebyl pøíliš širokı */
+    margin: auto; /* Zarovná obsah na støed obrazovky */
+    padding: 20px; /* Pøidá vnitøní odsazení pro lepší vzhled */
+}
+
+/* Styl pro patièku stránky */
+.footer {
+    width: 100%; /* Zajišuje, e patièka bude mít vdy plnou šíøku */
+    text-align: center; /* Zarovná text na støed */
+    background-color: #212529; /* Nastaví tmavou barvu pozadí */
+    color: white; /* Nastaví bílou barvu textu pro lepší èitelnost */
+    padding: 10px 0; /* Pøidá vertikální odsazení (horní a dolní) */
+    margin-top: auto; /* Zajistí, e patièka zùstane dole na stránce */
+}
+
+/* Pøidá mezeru nad tlaèítka nebo jiné prvky */
+.mezera {
+    margin-top: 20px; /* Pøidává 20px mezeru nad prvkem */
+}
+

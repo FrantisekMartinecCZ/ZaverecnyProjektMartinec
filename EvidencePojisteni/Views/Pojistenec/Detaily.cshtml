@@ -1,0 +1,249 @@
+﻿@model EvidencePojisteni.Models.Pojistenec
+@using EvidencePojisteni.PomocnaTrida
+
+<div class="container mt-5">
+    <h2 class="text-center">detaily</h2>
+
+    <div class="card shadow-sm p-4">
+        <div class="row align-items-center">
+            <!-- Profilová fotka -->
+            <div class="col-md-4 text-center">
+                <img src="/Obrazky/ico.png" alt="Profilová fotka" class="img-fluid rounded shadow">
+            </div>
+
+            <!-- Osobní údaje -->
+            <div class="col-md-8">
+                <h3>
+                    <i class="bi bi-person-circle 
+                        @(Model.Pohlavi == Pohlavi.muž ? "text-primary" : Model.Pohlavi == Pohlavi.žena ? "text-danger" : "text-success")"></i>
+                    <span class="ms-2
+        @(Model.Pohlavi == Pohlavi.muž ? "text-primary"
+          : Model.Pohlavi == Pohlavi.žena ? "text-danger"
+          : "text-success")">
+                        Uživatel: @Model.Jmeno @Model.Prijmeni
+                    </span>
+                </h3>
+
+           
+
+                <!-- Zobrazení zákonného zástupce pro mladší 18 let -->
+                @if (Model?.DatumNarozeni != null && (DateTime.Today.Year - Model.DatumNarozeni.Value.Year - (DateTime.Today < Model.DatumNarozeni.Value.AddYears(DateTime.Today.Year - Model.DatumNarozeni.Value.Year) ? 1 : 0)) < 18)
+                {
+                    <h4>
+                        <i class="bi bi-person-circle
+                        @(Model.Pohlavi == Pohlavi.muž ? "text-primary" : Model.Pohlavi == Pohlavi.žena ? "text-danger" : "text-success")"></i>
+                        <span class="ms-2 @(Model.Pohlavi == Pohlavi.muž ? "text-primary"
+                        : Model.Pohlavi == Pohlavi.žena ? "text-danger"
+                        : "text-success")">
+                            Zákonný zástupce: @Model.JmenoZakonnehoZastupce @Model.PrijmeniZakonnehoZastupce
+                        </span>
+                    </h4>
+                }
+                <!-- Zobrazení pohlaví -->
+                <p>
+                    <strong>
+                        <i class="bi bi-person-hearts me-1"></i> Pohlaví:
+                    </strong>
+                    <i class="
+            @(Model.Pohlavi == Pohlavi.muž ? "bi bi-gender-male text-primary" :
+              Model.Pohlavi == Pohlavi.žena ? "bi bi-gender-female text-danger" :
+              "bi bi-gender-ambiguous text-success") me-2">
+                    </i>
+                    @(Model.Pohlavi == Pohlavi.muž ? "muž" :
+                        Model.Pohlavi == Pohlavi.žena ? "žena" :
+                        "jiné")
+                </p>
+                <p><i class="bi bi-calendar3 text-info"></i> <strong>Datum narození:</strong> @Model.DatumNarozeni?.ToString("dd.MM.yyyy")</p>
+                <p><i class="bi bi-hourglass-split text-success"></i> <strong>Věk:</strong> @ViewData["Vek"] let</p>
+                <p><i class="bi bi-geo-alt-fill text-warning"></i> <strong>Adresa:</strong> @Model.Ulice, @Model.Mesto, @Model.PSC, @Model.ZemePuvodu</p>
+                <p><i class="bi bi-envelope-fill text-danger"></i> <strong>Email:</strong> @Model.Email</p>
+                <p><i class="bi bi-telephone-fill text-secondary"></i> <strong>Telefon:</strong> @PomocnaTrida.FormatujTelefonniCislo(Model.Telefon)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <hr>
+
+    <!-- Moje sjednaná pojištění -->
+    <h4 class="mt-4"><i class="bi bi-shield-check text-primary"></i> Moje sjednaná pojištění</h4>
+    <!-- Přidání pojištění -->
+    @if (User.IsInRole("Pojistitel"))
+    {
+        <a class="btn btn-primary mb-3"
+           asp-controller="Pojisteni"
+           asp-action="PridatPojisteni"
+           asp-route-pojistenecId="@Model.IdPojistence">
+            <i class="bi bi-plus-circle"></i> Přidat pojištění
+        </a>
+    }
+
+    @if (Model.Pojisteni != null && Model.Pojisteni.Count > 0)
+    {
+
+        <table class="table  text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 22%;"><i class="bi bi-file-earmark-text me-2"></i>Typ pojištění</th>
+                    <th style="width: 18%;"><i class="bi bi-cash me-2"></i>Částka</th>
+                    <th style="width: 25%;"><i class="bi bi-tag me-2"></i>Předmět pojištění</th>
+                    <th style="width: 20%;"><i class="bi bi-people me-2"></i>Role</th>
+                    @if (User.IsInRole("Pojistitel"))
+                    {
+                        <th style="width: 15%;"><i class="bi bi-tools me-2"></i>Akce</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pojisteni in Model.Pojisteni)
+                {
+                    <tr>
+                        <td>
+                            <i class="bi bi-journal-text text-primary me-2"></i>@pojisteni.TypPojisteni
+                        </td>
+                        <td>
+                            <i class="bi bi-currency-dollar text-success me-2"></i>@pojisteni.Castka Kč
+                        </td>
+                        <td>
+                            <i class="bi bi-bookmark text-warning me-2"></i>@pojisteni.PredmetPojisteni
+                        </td>
+                        <td>
+                            <i class="bi bi-person-badge text-info me-2"></i>@pojisteni.RolePojisteni
+                        </td>
+                        @if (User.IsInRole("Pojistitel"))
+                        {
+                            <td>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a class="btn btn-warning btn-sm"
+                                       asp-controller="Pojisteni"
+                                       asp-action="EditovatPojisteni"
+                                       asp-route-pojistenecId="@Model.IdPojistence"
+                                       asp-route-id="@pojisteni.IdPojisteni">
+                                        <i class="bi bi-pencil-square me-1"></i>Editovat
+                                    </a>
+
+                                    <a class="btn btn-danger btn-sm"
+                                       asp-controller="Pojisteni"
+                                       asp-action="SmazaniPojisteni"
+                                       asp-route-id="@pojisteni.IdPojisteni"
+                                       asp-route-pojistenecId="@Model.IdPojistence">
+                                        <i class="bi bi-trash me-1"></i>Odstranit
+                                    </a>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+
+    }
+    else
+    {
+        <p class="text-muted">Nemáte žádná sjednaná pojištění.</p>
+    }
+
+    <hr>
+
+    <!-- Moje pojistné události -->
+    <h4 class="mt-4"><i class="bi bi-calendar-event text-danger"></i> Moje pojistné události</h4>
+    <!-- Přidání události -->
+    @if (User.IsInRole("Pojistitel"))
+    {
+        <a class="btn btn-primary mb-3"
+           asp-controller="PojistnaUdalost"
+           asp-action="VytvoritUdalost"
+           asp-route-pojistenecId="@Model.IdPojistence">
+            <i class="bi bi-plus-circle"></i> Přidat pojistnou událost
+        </a>
+    }
+
+    @if (Model.PojistneUdalosti != null && Model.PojistneUdalosti.Count > 0)
+    {
+
+        <table class="table  text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 30%;"><i class="bi bi-card-text me-2"></i>Popis události</th>
+                    <th style="width: 15%;"><i class="bi bi-calendar-date me-2"></i>Datum události</th>
+                    <th style="width: 15%;"><i class="bi bi-clock me-2"></i>Nahlášení</th>
+                    <th style="width: 15%;"><i class="bi bi-exclamation-triangle me-2"></i>Stav</th>
+                    <th style="width: 15%;"><i class="bi bi-cash me-2"></i>Odhad škody</th>
+                    @if (User.IsInRole("Pojistitel"))
+                    {
+                        <th style="width: 10%;"><i class="bi bi-tools me-2"></i>Akce</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var udalost in Model.PojistneUdalosti)
+                {
+                    <tr>
+                        <td class="text-start">
+                            <i class="bi bi-file-earmark-text text-primary me-2"></i>@udalost.Popis
+                        </td>
+                        <td>
+                            <i class="bi bi-calendar-event text-info me-2"></i>@udalost.DatumUdalosti.ToShortDateString()
+                        </td>
+                        <td>
+                            <i class="bi bi-clock-history text-secondary me-2"></i>
+                            @(udalost.DatumNahlaseni.HasValue ? udalost.DatumNahlaseni.Value.ToShortDateString() : "Nezadáno")
+                        </td>
+                        <td>
+                            <i class="bi bi-exclamation-circle-fill text-warning me-2"></i>@udalost.Stav
+                        </td>
+                        <td>
+                            <i class="bi bi-cash-coin text-success me-2"></i>@udalost.OdhadSkody Kč
+                        </td>
+
+                        @if (User.IsInRole("Pojistitel"))
+                        {
+                            <td>
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a class="btn btn-warning btn-sm"
+                                       asp-controller="PojistnaUdalost"
+                                       asp-action="EditovatUdalost"
+                                       asp-route-id="@udalost.IdPojistnaUdalost"
+                                       asp-route-pojistenecId="@udalost.PojistenecId">
+                                        <i class="bi bi-pencil-square me-1"></i>Editovat
+                                    </a>
+
+                                    <a class="btn btn-danger btn-sm"
+                                       asp-controller="PojistnaUdalost"
+                                       asp-action="SmazaniUdalosti"
+                                       asp-route-id="@udalost.IdPojistnaUdalost"
+                                       asp-route-pojistenecId="@udalost.PojistenecId">
+                                        <i class="bi bi-trash me-1"></i>Odstranit
+                                    </a>
+                                </div>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+    else
+    {
+        <p class="text-muted">Nemáte evidovány žádné pojistné události.</p>
+    }
+
+    <hr>
+
+    <!-- Ovládací tlačítka -->
+    @if (User.IsInRole("Pojistitel"))
+    {
+        <div class="d-flex gap-2 mt-3">
+            <a class="btn btn-warning" asp-action="EditacePojistence" asp-route-id="@Model.IdPojistence">
+                <i class="bi bi-pencil"></i> Editovat pojištěnce
+            </a>
+            <a class="btn btn-danger" asp-action="SmazaniPojistenec" asp-route-id="@Model.IdPojistence">
+                <i class="bi bi-trash"></i> Odstranit pojištěnce
+            </a>
+        </div>
+    }
+</div>

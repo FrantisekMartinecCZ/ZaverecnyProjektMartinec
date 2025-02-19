@@ -1,0 +1,124 @@
+﻿@model EvidencePojisteni.Models.ZpravaStatistik
+
+<h2 class="mt-4"><i class="bi bi-bar-chart-line-fill text-primary"></i> Statistiky pojištění</h2>
+
+@if (TempData["ChybovaZprava"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ChybovaZprava"]
+    </div>
+}
+
+<!-- Základní statistiky -->
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th><i class="bi bi-graph-up"></i> Statistika</th>
+            <th class="text-center"><i class="bi bi-123"></i> Hodnota</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><i class="bi bi-people-fill text-info"></i> Celkový počet osob</td>
+            <td class="text-center">@Model.PocetPojistencu</td>
+        </tr>
+        <tr>
+            <td><i class="bi bi-exclamation-triangle-fill text-warning"></i> Počet pojistných událostí</td>
+            <td class="text-center">@Model.PocetPojistnychUdalosti</td>
+        </tr>
+        <tr>
+            <td><i class="bi bi-file-earmark-text-fill text-success"></i> Počet pojistných smluv</td>
+            <td class="text-center">@Model.PocetPojisteni</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Top 10 typů pojištění -->
+<h3 class="mt-4"><i class="bi bi-star-fill text-warning"></i> Top 10 nejčastějších typů pojištění</h3>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th><i class="bi bi-tags-fill text-secondary"></i> Typ pojištění</th>
+            <th><i class="bi bi-box-seam-fill text-info"></i> Předmět pojištění</th>
+            <th class="text-center"><i class="bi bi-calculator-fill text-primary"></i> Počet smluv</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var typ in Model.TopTypyPojisteni)
+        {
+            <tr>
+                <td><i class="bi bi-shield-lock-fill text-success"></i> @typ.TypPojisteni</td>
+                <td><i class="bi bi-box2-fill text-secondary"></i> @typ.PredmetPojisteni</td>
+                <td class="text-center"><i class="bi bi-clipboard-check-fill text-primary"></i> @typ.PocetSmluv</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Pojistníci a pojištěnci -->
+<h4 class="mt-4"><i class="bi bi-person-badge-fill text-danger"></i> Pojistníci a pojištěnci</h4>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th class="text-center"><i class="bi bi-cash-stack text-success"></i> Pojistníci (platí pojištění)</th>
+            <th class="text-center"><i class="bi bi-person-check-fill text-info"></i> Pojištěné osoby</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="text-center">@Model.PocetPojistniku</td>
+            <td class="text-center">@Model.PocetPojistenych</td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Statistiky podle věku -->
+<h3 class="mt-4"><i class="bi bi-calendar-check-fill text-primary"></i> Statistika podle věku</h3>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th><i class="bi bi-person-circle"></i> Věková kategorie</th>
+            <th class="text-center"><i class="bi bi-hash"></i> Počet osob</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><i class="bi bi-person-fill text-info"></i> Mladší 18 let</td>
+            <td class="text-center">@Model.PocetMladsi18</td>
+        </tr>
+        <tr>
+            <td><i class="bi bi-person-fill text-success"></i> Starší 18 let</td>
+            <td class="text-center">@Model.PocetStarsich18</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3 class="mt-4"><i class="bi bi-gender-ambiguous"></i> Počet pojištěnců podle pohlaví</h3>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th><i class="bi bi-person-lines-fill"></i> Pohlaví</th>
+            <th class="text-center"><i class="bi bi-hash"></i> Počet</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><i class="bi bi-gender-male text-primary"></i> Muži</td>
+            <td class="text-center">@Model.PocetMuzu</td>
+        </tr>
+        <tr>
+            <td><i class="bi bi-gender-female text-danger"></i> Ženy</td>
+            <td class="text-center">@Model.PocetZen</td>
+        </tr>
+        <tr>
+            <td><i class="bi bi-gender-trans text-warning"></i> Jiné</td>
+            <td class="text-center">@Model.PocetJinych</td>
+        </tr>
+    </tbody>
+</table>
+
+

@@ -1,0 +1,107 @@
+﻿@model List<EvidencePojisteni.Models.PojistnaUdalost>
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <!-- Nadpis s ikonou -->
+        <h2 class="text-center text-primary">
+            <div class="d-flex justify-content-center align-items-center">
+                <i class="bi bi-calendar-event-fill me-2 text-primary"></i> Seznam pojistných událostí
+            </div>
+        </h2>
+        <hr>
+
+        <!-- Kontrola, zda existují události -->
+        @if (Model != null && Model.Any())
+        {
+            <table class="table table-hover table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th><div class="d-flex align-items-center"><i class="bi bi-card-text me-2 text-info"></i> Popis události</div></th>
+                        <th><div class="d-flex align-items-center"><i class="bi bi-calendar-day me-2 text-success"></i> Datum události</div></th>
+                        <th><div class="d-flex align-items-center"><i class="bi bi-clock-history me-2 text-warning"></i> Datum nahlášení</div></th>
+                        <th><div class="d-flex align-items-center"><i class="bi bi-exclamation-circle me-2 text-danger"></i> Stav</div></th>
+                        <th><div class="d-flex align-items-center"><i class="bi bi-cash-coin me-2 text-primary"></i> Odhad škody</div></th>
+                        <th class="text-center"><div class="d-flex justify-content-center align-items-center"><i class="bi bi-tools me-2"></i> Akce</div></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var udalost in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-info-circle-fill me-2 text-info"></i> @udalost.Popis
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-calendar-check-fill me-2 text-success"></i> @udalost.DatumUdalosti.ToShortDateString()
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-clock-fill me-2 text-warning"></i> @(udalost.DatumNahlaseni.HasValue ? udalost.DatumNahlaseni.Value.ToShortDateString() : "Nezadáno")
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-exclamation-circle-fill me-2 text-danger"></i> @udalost.Stav
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-cash-stack me-2 text-primary"></i> @udalost.OdhadSkody Kč
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center">
+                                    <!-- Editovat -->
+                                    <a class="btn btn-warning btn-sm me-2"
+                                       asp-controller="PojistnaUdalost"
+                                       asp-action="EditovatUdalost"
+                                       asp-route-id="@udalost.IdPojistnaUdalost">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-pencil-square me-2"></i> Editovat
+                                        </div>
+                                    </a>
+
+                                    <!-- Odstranit -->
+                                    <a class="btn btn-danger btn-sm"
+                                       asp-controller="PojistnaUdalost"
+                                       asp-action="SmazaniUdalosti"
+                                       asp-route-id="@udalost.IdPojistnaUdalost"
+                                       asp-route-pojistenecId="@udalost.PojistenecId">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-trash-fill me-2"></i> Odstranit
+                                        </div>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <!-- Informační zpráva, když nejsou události -->
+            <div class="alert alert-info text-center">
+                <div class="d-flex justify-content-center align-items-center">
+                    <i class="bi bi-info-circle-fill me-2 text-info"></i>
+                    <strong>Žádné pojistné události nejsou evidovány.</strong>
+                </div>
+            </div>
+        }
+
+        <!-- Tlačítko pro přidání nové události -->
+        <div class="text-center mt-3">
+            <a class="btn btn-primary btn-lg"
+               asp-action="VytvoritUdalost"
+               asp-route-pojistenecId="@ViewBag.PojistenecId">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-plus-circle-fill me-2"></i> Přidat novou pojistnou událost
+                </div>
+            </a>
+        </div>
+    </div>
+</div>

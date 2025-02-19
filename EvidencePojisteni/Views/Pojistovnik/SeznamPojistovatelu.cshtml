@@ -1,0 +1,68 @@
+﻿<div class="container mt-4" style="max-width: 800px;">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h5 class="mb-0">📋 Seznam pojišťovatelů</h5>
+        </div>
+
+        <div class="card-body">
+            @if (TempData["Zprava"] != null)
+            {
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle"></i> @TempData["Zprava"]
+                </div>
+            }
+
+            @if (TempData["Chyba"] != null)
+            {
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle"></i> @TempData["Chyba"]
+                </div>
+            }
+
+            <!-- Tabulka pojišťovatelů -->
+            <table class="table table-bordered table-hover table-sm text-center">
+                <thead class="table-dark">
+                    <tr>
+
+                        <th>Jméno</th>
+                        <th>Email</th>
+                        <th>změnit heslo</th>
+                        <th>smazat</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var uzivatel in Model)
+                    {
+                        <tr>
+
+                            <td>@uzivatel.UserName</td>
+                            <td>@uzivatel.Email</td>
+                            <td>
+                                <!-- Změna hesla -->
+                                <form asp-action="ZmenitHeslo" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@uzivatel.Id" />
+                                    <div class="input-group input-group-sm">
+                                        <input type="password" name="noveHeslo" class="form-control" placeholder="Heslo" required />
+                                        <button type="submit" class="btn btn-warning">
+                                            🔑 Změnit
+                                        </button>
+                                    </div>
+                                </form>
+                            </td>
+                            <td>
+                                <!-- Smazání pojišťovatele -->
+                                <form asp-action="SmazatPojistovatele" method="post" class="d-inline" onsubmit="return confirm('Opravdu chcete smazat tohoto pojišťovatele?');">
+                                    <input type="hidden" name="id" value="@uzivatel.Id" />
+                                    <button type="submit" class="btn btn-danger ms-2 btn-sm">
+                                        🗑️ Smazat
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

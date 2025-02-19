@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PojištěníApp</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <!-- Vlastní styly -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigační lišta -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">PojištěníApp</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    @if (User.IsInRole("Pojistitel"))
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Pojistenec" asp-action="SeznamPojistencu">Seznam pojištěnců</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Doma" asp-action="Statistika">Statistika</a></li>
+                    }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="pojistovnik" asp-action="RegistracePojistitele">Registrace Pojistovnik</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Pojistovnik" asp-action="SeznamPojistovatelu">Seznam Pojišťovatelů</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Uzivatelsky" asp-action="SeznamUzivatelu">Seznam uživatelů</a></li>
+                    }
+                    @if (User.IsInRole("Pojištěný"))
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Pojistenec" asp-action="MojeDetaily">Zobrazit mé detaily</a></li>
+                    }
+                    <li class="nav-item"><a class="nav-link" asp-controller="Doma" asp-action="OchranaSoukromi">Ochrana soukromí</a></li>
+                </ul>
+
+                <!-- Přihlášený uživatel -->
+                <ul class="navbar-nav ms-auto">
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <span class="nav-link">
+                                Přihlášen jako
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <text>(Admin)</text>
+                                }
+                                else if (User.IsInRole("Pojištěný"))
+                                {
+                                    <text>(Pojištěnec)</text>
+                                }
+                                else if (User.IsInRole("Pojistitel"))
+                                {
+                                    <text>(Pojistitel)</text>
+                                }
+                                : @User.Identity.Name
+                            </span>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Uzivatelsky" asp-action="ZmenaHesla">Změnit heslo</a></li>
+                        <li class="nav-item">
+                            <form asp-controller="Uzivatelsky" asp-action="Odhlaseni" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-link nav-link">Odhlásit se</button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item"><a class="nav-link" asp-controller="Uzivatelsky" asp-action="Prihlaseni">Přihlásit</a></li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item"><a class="nav-link" asp-controller="Uzivatelsky" asp-action="Registrace">Registrovat</a></li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hlavní obsah -->
+    <div class="container mt-4 flex-grow-1">
+        @RenderBody()
+    </div>
+
+    <!-- Patička -->
+    <footer class="footer bg-dark text-white text-center py-3 mt-auto">
+        <div class="container">
+            &copy; František Martinec 2025 PojištěníApp
+        </div>
+    </footer>
+
+    <!-- 🛠️ Načtení jQuery správně -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- ASP.NET validace -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Vlastní JavaScript -->
+    @RenderSection("Scripts", required: false)
+    <script src="/js/PojistovnaAPP.js"></script>
+</body>
+</html>

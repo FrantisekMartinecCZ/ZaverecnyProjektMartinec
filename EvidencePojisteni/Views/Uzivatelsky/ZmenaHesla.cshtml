@@ -1,0 +1,33 @@
+﻿@model EvidencePojisteni.Models.ViewModels.ZmenaHeslaViewModel
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="col-md-6">
+        <h2 class="text-center mb-4">Změna hesla</h2>
+
+        <form asp-action="ZmenaHesla" method="post" class="p-4 border rounded shadow-sm bg-light">
+            <div class="mb-3">
+                <label asp-for="StareHeslo" class="form-label">Staré heslo</label>
+                <input asp-for="StareHeslo" type="password" class="form-control" placeholder="Zadejte staré heslo..." />
+                <span asp-validation-for="StareHeslo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="NoveHeslo" class="form-label">Nové heslo</label>
+                <input asp-for="NoveHeslo" type="password" class="form-control" placeholder="Zadejte nové heslo..." />
+                <span asp-validation-for="NoveHeslo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="PotvrzeniHesla" class="form-label">Potvrzení hesla</label>
+                <input asp-for="PotvrzeniHesla" type="password" class="form-control" placeholder="Znovu zadejte nové heslo..." />
+                <span asp-validation-for="PotvrzeniHesla" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Změnit heslo</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+}

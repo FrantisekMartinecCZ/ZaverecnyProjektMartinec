@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Přístup zakázán";
+}
+
+<div class="container mt-5 text-center">
+    <h2 class="text-danger">Přístup zakázán</h2>
+    <p class="lead">Bohužel, nemáte oprávnění pro přístup na tuto stránku.</p>
+
+    @if (!string.IsNullOrEmpty(ViewData["ReturnUrl"] as string))
+    {
+            <p>
+                <a href="@ViewData["ReturnUrl"]" class="btn btn-secondary">Zpět</a>
+            </p>
+    }
+    else
+    {
+            <p>
+                <a asp-controller="Doma" asp-action="Index" class="btn btn-primary">Zpět na domovskou stránku</a>
+            </p>
+    }
+</div>

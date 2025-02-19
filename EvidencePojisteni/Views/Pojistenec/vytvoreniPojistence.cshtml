@@ -1,0 +1,131 @@
+﻿@model EvidencePojisteni.Models.ViewModels.PojistenecViewModel
+
+<!-- Zobrazení upozornění z ViewBag -->
+
+
+<div class="container mt-5">
+    <h2 class="text-center">Vytvořit nového pojištěnce</h2>
+
+    <form asp-action="vytvoreniPojistence" method="post">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Jmeno">Jméno</label>
+                    <input asp-for="Jmeno" class="form-control" placeholder="Zadejte jméno..." />
+                    <span asp-validation-for="Jmeno" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Prijmeni">Příjmení</label>
+                    <input asp-for="Prijmeni" class="form-control" placeholder="Zadejte příjmení..." />
+                    <span asp-validation-for="Prijmeni" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Pohlavi" class="form-label">Pohlaví</label>
+                    <select asp-for="Pohlavi" class="form-control">
+                        <option value="">-- Vyberte pohlaví --</option>
+                        @foreach (var pohlavi in Enum.GetValues(typeof(EvidencePojisteni.Models.Pohlavi)))
+                        {
+                            <option value="@pohlavi">@pohlavi</option>
+                        }
+                    </select>
+                    <span asp-validation-for="Pohlavi" class="text-danger"></span>
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="DatumNarozeni">Datum narození</label>
+                    <input asp-for="DatumNarozeni" type="date" class="form-control" id="datumNarozeni" />
+                    <span asp-validation-for="DatumNarozeni" class="text-danger"></span>
+                    <!-- Místo pro zobrazení chybové zprávy -->
+                    <span asp-validation-for="DatumNarozeni" class="text-danger"></span>
+                    <div id="ageError" class="text-danger mt-1"></div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" type="email" class="form-control" placeholder="Zadejte email..." />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Telefon">Telefon</label>
+                    <input asp-for="Telefon" class="form-control" placeholder="Zadejte telefon..." />
+                    <span asp-validation-for="Telefon" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Ulice">Ulice</label>
+                    <input asp-for="Ulice" class="form-control" placeholder="Zadejte ulici..." />
+                    <span asp-validation-for="Ulice" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Mesto">Město</label>
+                    <input asp-for="Mesto" class="form-control" placeholder="Zadejte město..." />
+                    <span asp-validation-for="Mesto" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="PSC">PSČ</label>
+                    <input asp-for="PSC" class="form-control" placeholder="Zadejte PSČ..." />
+                    <span asp-validation-for="PSC" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Seznam zemí -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="ZemePuvodu">Země původu</label>
+                    <select asp-for="ZemePuvodu" class="form-control" id="ZemePuvodu" required>
+                        <option value="">Vyberte zemi</option>
+                    </select>
+                    <span asp-validation-for="ZemePuvodu" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label asp-for="Heslo">Heslo</label>
+                    <input asp-for="Heslo" type="password" class="form-control" placeholder="Zadejte heslo..." />
+                    <span asp-validation-for="Heslo" class="text-danger"></span>
+                </div>
+            </div>
+
+            <!-- Sekce pro zákonného zástupce -->
+            <div class="col-md-6" id="zastupceSection" style="display:none;">
+                <label for="JmenoZakonnehoZastupce">Jméno zástupce</label>
+                <input asp-for="JmenoZakonnehoZastupce" class="form-control" id="JmenoZakonnehoZastupce" placeholder="Jméno zástupce">
+            </div>
+
+            <div class="col-md-6" id="zastupceSection2" style="display:none;">
+                <label for="PrijmeniZakonnehoZastupce">Příjmení zástupce</label>
+                <input asp-for="PrijmeniZakonnehoZastupce" class="form-control" id="PrijmeniZakonnehoZastupce" placeholder="Příjmení zástupce">
+            </div>
+
+            <div class="col-12 text-center">
+                <button type="submit" class="btn btn-primary mt-3">Uložit</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+

@@ -1,0 +1,92 @@
+﻿@model EvidencePojisteni.Models.Pojisteni
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 border-danger">
+        <!-- Nadpis s ikonou -->
+        <h2 class="text-danger text-center">
+            <div class="d-flex justify-content-center align-items-center">
+                <i class="bi bi-exclamation-octagon-fill me-2 text-danger"></i> Odstranit pojištění
+            </div>
+        </h2>
+        <hr>
+
+        <!-- Výstražná zpráva -->
+        <div class="alert alert-warning text-center">
+            <div class="d-flex justify-content-center align-items-center">
+                <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>
+                <strong>Opravdu chcete odstranit toto pojištění?</strong> Tato akce je <strong>nevratná!</strong>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Levá část: Ikona -->
+            <div class="col-md-4 text-center">
+                <div class="mb-3">
+                    <i class="bi bi-shield-x text-danger" style="font-size: 5rem;"></i>
+                </div>
+            </div>
+
+            <!-- Pravá část: Detaily pojištění s ikonami -->
+            <div class="col-md-8">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-file-earmark-text-fill me-2 text-primary"></i>
+                            <strong>Typ pojištění:</strong> @Model.TypPojisteni
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-tag-fill me-2 text-success"></i>
+                            <strong>Předmět pojištění:</strong> @Model.PredmetPojisteni
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-cash-stack me-2 text-info"></i>
+                            <strong>Částka:</strong> @Model.Castka Kč
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-calendar-check-fill me-2 text-primary"></i>
+                            <strong>Platnost od:</strong> @Model.PlatnostOd.ToShortDateString()
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-calendar-x-fill me-2 text-danger"></i>
+                            <strong>Platnost do:</strong> @(Model.PlatnostDo.HasValue ? Model.PlatnostDo.Value.ToShortDateString() : "Neomezeno")
+                        </div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person-badge-fill me-2 text-secondary"></i>
+                            <strong>Role:</strong> @Model.RolePojisteni
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Ovládací tlačítka -->
+        <div class="text-center">
+            <form asp-action="SmazaniPojisteni" method="post">
+                <input type="hidden" asp-for="IdPojisteni" />
+                <input type="hidden" asp-for="PojistenecId" />
+                <button type="submit" class="btn btn-danger btn-lg">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-trash3-fill me-2"></i> Ano, smazat
+                    </div>
+                </button>
+                <a asp-action="Detaily" asp-controller="Pojistenec" asp-route-id="@Model.PojistenecId" class="btn btn-secondary btn-lg">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-arrow-left-circle-fill me-2"></i> Zrušit
+                    </div>
+                </a>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,108 @@
+﻿@model EvidencePojisteni.Models.Pojistenec
+@using EvidencePojisteni.PomocnaTrida
+
+<div class="container mt-5">
+    <h2 class="text-center text-danger">
+        <div class="d-flex justify-content-center align-items-center">
+            <i class="bi bi-x-circle-fill me-2 text-danger"></i> Odstranění pojištěnce
+        </div>
+    </h2>
+
+    <form asp-action="SmazaniPojistenec" method="post" class="text-center">
+        <input type="hidden" asp-for="IdPojistence" />
+
+
+        <div class="card shadow-sm p-4">
+            <div class="row">
+                <!-- Profilový obrázek -->
+                <div class="col-md-4 text-center">
+                    <div class="mb-3">
+                        <img src="/Obrazky/ico.png" alt="Profilová fotka" class="img-fluid rounded-circle shadow">
+                    </div>
+                </div>
+
+                <!-- Informace o pojištěnci -->
+                <div class="col-md-8 text-start">
+                    <h4 class="fw-bold">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person-fill me-2 text-primary"></i> @Model.Jmeno @Model.Prijmeni
+                        </div>
+                    </h4>
+                    @if (Model?.DatumNarozeni != null && (DateTime.Today.Year - Model.DatumNarozeni.Value.Year - (DateTime.Today < Model.DatumNarozeni.Value.AddYears(DateTime.Today.Year - Model.DatumNarozeni.Value.Year) ? 1 : 0)) < 18)
+                    {
+                  
+                    <h5 class="fw-bold">
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person-fill me-2 text-primary"></i>Zákoný zástupce: @Model.JmenoZakonnehoZastupce @Model.PrijmeniZakonnehoZastupce
+                        </div>
+                    </h5>
+                    }
+                    <p>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-person-hearts me-1"></i>
+                            <strong>
+                                 Pohlaví: @Model.Pohlavi
+                            </strong>
+                        </div>
+                    </p>
+                    <p>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-calendar-event-fill me-2 text-info"></i>
+                            <strong>Datum narození:</strong> @Model.DatumNarozeni?.ToString("dd.MM.yyyy")
+                        </div>
+                    </p>
+                    <p>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-hourglass-split me-2 text-success"></i>
+                            <strong>Věk:</strong> @ViewData["Vek"] let
+                        </div>
+                    </p>
+                    <p>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-envelope-fill me-2 text-danger"></i>
+                            <strong>Email:</strong> @Model.Email
+                        </div>
+                    </p>
+                    <p>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-telephone-fill me-2 text-warning"></i>
+                            <strong>Telefon:</strong> @PomocnaTrida.FormatujTelefonniCislo(Model.Telefon)
+                        </div>
+                    </p>
+                    <p>
+                        <div class="d-flex align-items-center">
+                            <i class="bi bi-geo-alt-fill me-2 text-secondary"></i>
+                            <strong>Adresa:</strong> @Model.Ulice, @Model.Mesto, @Model.PSC , @Model.ZemePuvodu
+                        </div>
+                    </p>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- Výstraha pro uživatele -->
+            <div class="alert alert-danger text-center" role="alert">
+                <div class="d-flex justify-content-center align-items-center">
+                    <i class="bi bi-exclamation-triangle-fill me-2 text-danger"></i>
+                    <strong>Varování!</strong> Tato akce je nevratná. Odstraněním tohoto pojištěnce odstraníte i všechna jeho navázaná pojištění.
+                </div>
+            </div>
+
+            <!-- Akční tlačítka -->
+
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <button type="submit" class="btn btn-danger btn-lg">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-trash-fill me-2"></i> Odstranit
+                    </div>
+                </button>
+                <a asp-action="SeznamPojistencu" class="btn btn-secondary btn-lg">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-arrow-left-circle-fill me-2"></i> Zrušit
+                    </div>
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+

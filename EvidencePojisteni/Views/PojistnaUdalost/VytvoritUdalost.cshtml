@@ -1,0 +1,60 @@
+﻿@model EvidencePojisteni.Models.PojistnaUdalost
+
+<div class="container mt-5">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center text-primary">Přidat pojistnou událost</h2>
+        <hr>
+
+        <form asp-action="VytvoritUdalost" method="post">
+            <input type="hidden" asp-for="PojistenecId" />
+           
+            <div class="mb-3">
+                <label asp-for="Popis" class="form-label">Popis události</label>
+                <textarea asp-for="Popis" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Popis" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DatumUdalosti" class="form-label">Datum události</label>
+                <input asp-for="DatumUdalosti" class="form-control" type="date" />
+                <span asp-validation-for="DatumUdalosti" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="DatumNahlaseni" class="form-label">Datum nahlášní události</label>
+                <input asp-for="DatumNahlaseni" class="form-control" type="date" />
+                <span asp-validation-for="DatumNahlaseni" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="OdhadSkody" class="form-label">Odhad škody (Kč)</label>
+                <input asp-for="OdhadSkody" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="OdhadSkody" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Stav" class="form-label">Stav</label>
+                <select asp-for="Stav" class="form-control">
+                    <option value="Otevřeno">Otevřeno</option>
+                    <option value="Vyřízeno">Vyřízeno</option>
+                    <option value="Zamítnuto">Zamítnuto</option>
+                </select>
+                <span asp-validation-for="Stav" class="text-danger"></span>
+            </div>
+            <div class="mb-4">
+                <label asp-for="Poznamka" class="form-label fw-bold">Poznámka</label>
+                <textarea asp-for="Poznamka" class="form-control" rows="2"></textarea>
+            </div>
+
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="bi bi-plus-circle"></i> Uložit
+                </button>
+
+                <a asp-action="Detaily" asp-controller="Pojistenec" asp-route-id="@ViewBag.PojistenecId" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-arrow-left"></i> Zpět
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

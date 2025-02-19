@@ -1,0 +1,184 @@
+﻿@model EvidencePojisteni.Models.Pojistenec
+@using EvidencePojisteni.PomocnaTrida
+
+<div class="container mt-5">
+    <h2 class="text-center">Moje detaily</h2>
+
+    <!-- Hlavní karta s osobními údaji -->
+    <div class="card shadow-sm p-4">
+        <div class="row align-items-center">
+            <!-- Profilová fotka vlevo -->
+            <div class="col-md-4 text-center">
+                <img src="/Obrazky/ico.png" alt="Profilová fotka" class="img-fluid rounded shadow">
+            </div>
+
+            <!-- Osobní údaje vpravo -->
+            <div class="col-md-8">
+                <h3>
+                    <i class="bi bi-person-circle
+                        @(Model.Pohlavi == Pohlavi.muž ? "text-primary" : Model.Pohlavi == Pohlavi.žena ? "text-danger" : "text-success")"></i>
+                    <span class="ms-2
+        @(Model.Pohlavi == Pohlavi.muž ? "text-primary"
+          : Model.Pohlavi == Pohlavi.žena ? "text-danger"
+          : "text-success")">
+                        Uživatel: @Model.Jmeno @Model.Prijmeni
+                    </span>
+                </h3>
+
+                <!-- Zákonný zástupce, pokud je pojištěnec mladší 18 let -->
+                @if (Model?.DatumNarozeni != null
+                && (DateTime.Today.Year - Model.DatumNarozeni.Value.Year
+                - (DateTime.Today < Model.DatumNarozeni.Value.AddYears(
+                DateTime.Today.Year - Model.DatumNarozeni.Value.Year) ? 1 : 0)) < 18)
+                {
+                    <h4>
+                        <i class="bi bi-person-circle
+                        @(Model.Pohlavi == Pohlavi.muž ? "text-primary" : Model.Pohlavi == Pohlavi.žena ? "text-danger" : "text-success")"></i>
+                        <span class="ms-2 @(Model.Pohlavi == Pohlavi.muž ? "text-primary"
+                        : Model.Pohlavi == Pohlavi.žena ? "text-danger"
+                        : "text-success")">
+                            Zákonný zástupce: @Model.JmenoZakonnehoZastupce @Model.PrijmeniZakonnehoZastupce
+                        </span>
+                    </h4>
+                }
+                <!-- Zobrazení pohlaví -->
+                <p>
+                    <strong>
+                        <i class="bi bi-person-hearts me-1"></i> Pohlaví:
+                    </strong>
+                    <i class="
+            @(Model.Pohlavi == Pohlavi.muž ? "bi bi-gender-male text-primary" :
+              Model.Pohlavi == Pohlavi.žena ? "bi bi-gender-female text-danger" :
+              "bi bi-gender-ambiguous text-success") me-2">
+                    </i>
+                    @(Model.Pohlavi == Pohlavi.muž ? "muž" :
+                        Model.Pohlavi == Pohlavi.žena ? "žena" :
+                        "jiné")
+                </p>
+                <p>
+                    <i class="bi bi-calendar3 text-info"></i>
+                    <strong>Datum narození:</strong>
+                    @Model.DatumNarozeni?.ToString("dd.MM.yyyy")
+                </p>
+
+                <p>
+                    <i class="bi bi-hourglass-split text-success"></i>
+                    <strong>Věk:</strong> @ViewData["Vek"] let
+                </p>
+
+                <p>
+                    <i class="bi bi-geo-alt-fill text-warning"></i>
+                    <strong>Adresa:</strong>
+                    @Model.Ulice, @Model.Mesto, @Model.PSC
+                </p>
+
+                <p>
+                    <i class="bi bi-envelope-fill text-danger"></i>
+                    <strong>Email:</strong> @Model.Email
+                </p>
+
+                <p>
+                    <i class="bi bi-telephone-fill text-secondary"></i>
+                    <strong>Telefon:</strong> @PomocnaTrida.FormatujTelefonniCislo(Model.Telefon)
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<!-- Moje sjednaná pojištění -->
+<h4 class="mt-4">
+    <i class="bi bi-shield-check text-primary"></i> Moje sjednaná pojištění
+</h4>
+@if (Model.Pojisteni != null && Model.Pojisteni.Count > 0)
+{
+    <div class="card shadow-sm p-3">
+        <table class="table table-striped table-hover text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th><i class="bi bi-file-earmark-text me-1"></i>Typ pojištění</th>
+                    <th><i class="bi bi-cash me-1"></i>Částka</th>
+                    <th><i class="bi bi-tag me-1"></i>Předmět</th>
+                    <th><i class="bi bi-people me-1"></i>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model.Pojisteni)
+                {
+                    <tr>
+                        <td>
+                            <i class="bi bi-journal-text text-primary me-1"></i> @p.TypPojisteni
+                        </td>
+                        <td>
+                            <i class="bi bi-currency-dollar text-success me-1"></i> @p.Castka Kč
+                        </td>
+                        <td>
+                            <i class="bi bi-bookmark text-warning me-1"></i> @p.PredmetPojisteni
+                        </td>
+                        <td>
+                            <i class="bi bi-person-badge text-info me-1"></i> @p.RolePojisteni
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p class="text-muted">Nemáte žádná sjednaná pojištění.</p>
+}
+
+<hr>
+
+<!-- Moje pojistné události -->
+<h4 class="mt-4">
+    <i class="bi bi-calendar-event text-danger"></i> Moje pojistné události
+</h4>
+
+@if (Model.PojistneUdalosti != null && Model.PojistneUdalosti.Count > 0)
+{
+
+    <div class="card shadow-sm p-3">
+        <table class="table table-striped table-hover text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th><i class="bi bi-card-text me-1"></i>Popis</th>
+                    <th><i class="bi bi-calendar-date me-1"></i>Datum</th>
+                    <th><i class="bi bi-clock me-1"></i>Nahlášení</th>
+                    <th><i class="bi bi-exclamation-triangle me-1"></i>Stav</th>
+                    <th><i class="bi bi-cash me-1"></i>Odhad škody</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var u in Model.PojistneUdalosti)
+                {
+                    <tr>
+                        <td class="text-start">
+                            <i class="bi bi-file-earmark-text text-primary me-1"></i> @u.Popis
+                        </td>
+                        <td>
+                            <i class="bi bi-calendar-event text-info me-1"></i> @u.DatumUdalosti.ToShortDateString()
+                        </td>
+                        <td>
+                            <i class="bi bi-clock-history text-secondary me-1"></i>
+                            @(u.DatumNahlaseni.HasValue ? u.DatumNahlaseni.Value.ToShortDateString() : "Nezadáno")
+                        </td>
+                        <td>
+                            <i class="bi bi-exclamation-circle-fill text-warning me-1"></i> @u.Stav
+                        </td>
+                        <td>
+                            <i class="bi bi-cash-coin text-success me-1"></i> @u.OdhadSkody Kč
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <p class="text-muted">Nemáte evidovány žádné pojistné události.</p>
+}

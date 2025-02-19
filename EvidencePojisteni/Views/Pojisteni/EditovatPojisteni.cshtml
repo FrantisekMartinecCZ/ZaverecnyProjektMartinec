@@ -1,0 +1,95 @@
+﻿@model EvidencePojisteni.Models.Pojisteni
+
+@if (ViewBag.Varovani != null)
+{
+    <div class="alert alert-warning mt-3">
+        <strong>⚠️ Upozornění:</strong> @ViewBag.Varovani
+    </div>
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Editace pojištění</h2>
+
+    <div class="card shadow-sm p-4">
+        <form asp-action="EditovatPojisteni" method="post">
+            <input type="hidden" name="pojistenecId" value="@Model.PojistenecId" />
+            <input type="hidden" asp-for="IdPojisteni" />
+
+            <div class="row">
+                <!-- Typ pojištění -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="TypPojisteni" class="form-label">Typ pojištění</label>
+                        <select asp-for="TypPojisteni" class="form-control" id="typPojisteniSelect"
+                                data-aktualni-typ="@Model?.TypPojisteni">
+                        </select>
+                        <span asp-validation-for="TypPojisteni" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Předmět pojištění -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="PredmetPojisteni" class="form-label">Předmět pojištění</label>
+                        <select asp-for="PredmetPojisteni" class="form-control" id="predmetPojisteniSelect"
+                                data-aktualni-predmet="@Model?.PredmetPojisteni">
+                        </select>
+                        <span asp-validation-for="PredmetPojisteni" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Částka -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="Castka" class="form-label">Částka</label>
+                        <input asp-for="Castka" class="form-control" type="number" step="0.01" min="0" />
+                        <span asp-validation-for="Castka" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Platnost od -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="PlatnostOd" class="form-label">Platnost od</label>
+                        <input asp-for="PlatnostOd" type="date" class="form-control" />
+                        <span asp-validation-for="PlatnostOd" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Platnost do -->
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="PlatnostDo" class="form-label">Platnost do</label>
+                        <input asp-for="PlatnostDo" type="date" class="form-control" />
+                        <span asp-validation-for="PlatnostDo" class="text-danger"></span>
+                    </div>
+                </div>
+                <!-- Role v pojistení -->
+                <div class="mb-3">
+                    <label asp-for="RolePojisteni" class="form-label">Role v pojištění</label>
+                    <select asp-for="RolePojisteni" class="form-control">
+                        <option value="Pojistnik">Pojistník (uzavírá smlouvu, platí pojištění)</option>
+                        <option value="Pojisteny">Pojištěný (je kryt pojištěním)</option>
+                    </select>
+                </div>
+
+
+            </div>
+
+            <hr>
+
+            <!-- Ovládací tlačítka -->
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-check-circle"></i> Uložit pojištění
+                </button>
+                <a asp-action="Detaily" asp-controller="Pojistenec" asp-route-id="@ViewBag.PojistenecId" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-arrow-left"></i> Zrušit
+                </a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/js/PojistovnaAPP.js"></script>

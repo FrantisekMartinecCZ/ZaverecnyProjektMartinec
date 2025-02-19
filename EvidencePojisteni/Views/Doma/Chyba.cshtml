@@ -1,0 +1,25 @@
+﻿@model EvidencePojisteni.Models.ViewModels.ChybovyViewModel
+@{
+    ViewData["Title"] = "Chyba"; // Nastavení titulku stránky
+}
+
+<div class="container text-center mt-5">
+    <h1 class="text-danger">Došlo k chybě.</h1> <!-- Nadpis s chybovou hláškou -->
+    <h2 class="text-secondary">Během zpracování vašeho požadavku nastala neočekávaná chyba.</h2> <!-- Podnadpis s vysvětlením chyby -->
+    @if (Model.ZobrazitIdPozadavku) // Podmínka: zobrazit ID požadavku, pokud je to povoleno v modelu
+    {
+        <p class="mt-3">
+            <strong>ID požadavku:</strong> <code>@Model.IdPozadavku</code> <!-- Zobrazení ID požadavku -->
+        </p>
+    }
+
+    <p class="mt-3">
+        Pokud problém přetrvává, kontaktujte
+        <a href="mailto:podpora@pojisteniapp.cz">podporu</a>. <!-- Odkaz na podporu -->
+    </p>
+
+    <!-- Tlačítko pro návrat na hlavní stránku -->
+    <a asp-controller="Doma" asp-action="OchranaSoukromi" class="btn btn-primary mt-4">
+        Zpět na hlavní stránku
+    </a>
+</div>
